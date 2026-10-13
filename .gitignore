@@ -1,0 +1,9 @@
+# arquivos do jogo e gerados -- nunca no git
+**/.src/
+**/pronto/
+**/bin/
+**/obj/
+*.dll
+*.orig.dll
+varredura.md
+*.log

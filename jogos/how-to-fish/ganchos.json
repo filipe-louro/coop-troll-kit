@@ -1,0 +1,22 @@
+{
+  // How to Fish -- Unity 6 Mono + FishNet
+  "managed": "C:/Users/user/Desktop/games/How to Fish v1.0.10/How to Fish/How to Fish_Data/Managed",
+  "modDll": "mod/bin/Release/net472/HtfMod.dll",
+  "modClasse": "HtfMod.Mod",
+  "saida": "pronto/Assembly-CSharp.dll",
+  "ganchos": [
+    { "tipo": "interceptar", "classe": "DazedCommands", "metodo": "IsServerCommand",
+      "args": ["arg:fullCommand"], "chamar": "Comando", "retorno": "true" },
+    { "tipo": "trocar-chamada", "classe": "DazedCommands", "metodo": "IsServerCommand",
+      "alvo": "get_CheatsEnabled", "valor": 1, "esperado": 1 },
+    { "tipo": "filtrar-arg", "classe": "PlayerVitals", "metodo": "TakeDamage", "param": "amount",
+      "extras": ["this._player"], "chamar": "Dano", "retornarSeZero": true },
+    { "tipo": "filtrar-arg", "classe": "Server", "metodo": "RpcLogic___HitCreature", "prefixo": true,
+      "param": "P_2", "extras": ["arg:P_1"], "chamar": "DanoCausado" },
+    { "tipo": "filtrar-arg", "classe": "Server", "metodo": "RpcLogic___HitPlayer", "prefixo": true,
+      "param": "P_1", "extras": ["arg:P_5"], "chamar": "DanoCausado" },
+    { "tipo": "filtrar-arg", "classe": "CasinoManager", "metodo": "ServerRouletteResult", "param": "winColor",
+      "extrasDepois": ["this._curBetColor"], "chamar": "Roleta" }
+  ]
+}
+

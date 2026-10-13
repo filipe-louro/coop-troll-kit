@@ -1,0 +1,17 @@
+{
+  // Muck (Steam) -- Unity 2019.4 Mono
+  "managed": "C:/Program Files (x86)/Steam/steamapps/common/Muck/Muck_Data/Managed",
+  "modDll": "mod/bin/Release/net472/MuckMod.dll",
+  "modClasse": "MuckMod.Mod",
+  "saida": "pronto/Assembly-CSharp.dll",
+  "ganchos": [
+    { "tipo": "interceptar", "classe": "ChatBox", "metodo": "ChatCommand", "depoisDaChamada": "ClearMessage",
+      "args": ["arg:message"], "chamar": "Comando", "retorno": "void" },
+    { "tipo": "no-inicio", "classe": "ChatBox", "metodo": "Update", "chamar": "Tick" },
+    { "tipo": "filtrar-arg", "classe": "PlayerStatus", "metodo": "HandleDamage", "param": "damageTaken",
+      "chamar": "Dano", "retornarSeZero": true },
+    { "tipo": "filtrar-arg", "classe": "ClientSend", "metodo": "PlayerDamageMob", "param": "damage", "chamar": "DanoCausado" },
+    { "tipo": "filtrar-arg", "classe": "ClientSend", "metodo": "PlayerHit", "param": "damage", "chamar": "DanoCausado" },
+    { "tipo": "filtrar-arg", "classe": "ClientSend", "metodo": "PlayerHitObject", "param": "damage", "chamar": "DanoColeta" }
+  ]
+}

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Compila contra as DLLs do proprio jogo. novo-jogo.ps1 preenche __MANAGED__ e __MOD__. -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyName>__MOD__</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <NoStdLib>true</NoStdLib>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <Nullable>disable</Nullable>
+    <Managed>__MANAGED__</Managed>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Assembly-CSharp.orig.dll: o backup sem patch (o patcher cria na primeira vez; novo-jogo.ps1 tambem) -->
+    <Reference Include="Assembly-CSharp"><HintPath>$(Managed)\Assembly-CSharp.orig.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="mscorlib"><HintPath>$(Managed)\mscorlib.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System"><HintPath>$(Managed)\System.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="System.Core"><HintPath>$(Managed)\System.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="netstandard" Condition="Exists('$(Managed)\netstandard.dll')"><HintPath>$(Managed)\netstandard.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(Managed)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(Managed)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.PhysicsModule" Condition="Exists('$(Managed)\UnityEngine.PhysicsModule.dll')"><HintPath>$(Managed)\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <!-- Input: Unity antiga = InputLegacyModule -->
+    <Reference Include="UnityEngine.InputLegacyModule" Condition="Exists('$(Managed)\UnityEngine.InputLegacyModule.dll')"><HintPath>$(Managed)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <!-- Adicione aqui as DLLs de rede do jogo (FishNet.Runtime, Mirror, Facepunch...) se precisar -->
+  </ItemGroup>
+</Project>
