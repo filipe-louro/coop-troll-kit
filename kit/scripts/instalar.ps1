@@ -22,7 +22,8 @@ if ($Remover) {
 
 # update da Steam deixa o .orig velho: se o Assembly atual nao e o nosso patch, ele e o novo original
 $pronto = "$dir\pronto\Assembly-CSharp.dll"
-if ((Test-Path $pronto) -and (Test-Path "$M\Assembly-CSharp.orig.dll") -and
+if (-not (Test-Path "$M\Assembly-CSharp.dll")) { Write-Host "Assembly-CSharp.dll ausente (Steam verificando?) -- usando o .orig" }
+elseif ((Test-Path $pronto) -and (Test-Path "$M\Assembly-CSharp.orig.dll") -and
     (Get-FileHash "$M\Assembly-CSharp.dll").Hash -ne (Get-FileHash $pronto).Hash -and
     (Get-FileHash "$M\Assembly-CSharp.dll").Hash -ne (Get-FileHash "$M\Assembly-CSharp.orig.dll").Hash) {
     Write-Host "Assembly-CSharp mudou (update?) -- renovando o .orig"
@@ -58,3 +59,4 @@ Copy-Item '$dir\pronto\Assembly-CSharp.dll' '$M\Assembly-CSharp.dll' -Force
     Start-Process pwsh -WindowStyle Hidden -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$tmp`""
     "Jogo aberto: a nova versao entra sozinha quando voce fechar o jogo (log em pronto\instalacao.log)."
 }
+

@@ -156,7 +156,7 @@ namespace MuckMod
                     var normais = MobSpawner.Instance.allMobs.Where(t => !t.boss).ToList();
                     Mob(normais[UnityEngine.Random.Range(0, normais.Count)].name, 1, p, false);
                 }));
-                else if (Input.GetKeyDown(KeyCode.F7)) Host(() => ParaCada(new string[0], p => Mob(null, 1, p, true)));
+                else if (Input.GetKeyDown(KeyCode.F7) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) Host(() => ParaCada(new string[0], p => Mob(null, 1, p, true)));
                 else if (Input.GetKeyDown(KeyCode.F8)) Item(new[] { "coin", "500" });
                 else if (Input.GetKeyDown(KeyCode.F9)) SetDano(_multDano * 2f);
                 else if (Input.GetKeyDown(KeyCode.F10)) SetDano(_multDano / 2f);
@@ -174,7 +174,7 @@ namespace MuckMod
         static void Teclas()
         {
             Msg("<b>Teclas</b> (fora do chat):\n" +
-                "F5 bomba no proximo amigo (host)   F6 bicho perto dele (host)   F7 chefe nele (host)\n" +
+                "F5 bomba no proximo amigo (host)   F6 bicho perto dele (host)   Shift+F7 chefe nele (host, nunca o Bob)\n" +
                 "F8 +500 de ouro   F9 dano x2   F10 dano /2   F11 imortal liga/desliga");
         }
 
@@ -344,13 +344,16 @@ namespace MuckMod
 
         static readonly List<int> _criados = new List<int>();
 
+        static bool EhChefeFinal(MobType t) => t && t.mobPrefab && t.mobPrefab.GetComponent<BobMob>();
+
         static void Mob(string nome, int qtd, PlayerManager p, bool chefe)
         {
             var tipos = MobSpawner.Instance.allMobs;
             MobType tipo;
             if (chefe)
             {
-                var chefes = tipos.Where(t => t.boss).ToList();
+                // nunca o Bob: e o chefe final -- mata-lo encerra a partida (Dragon -> GameOver)
+                var chefes = tipos.Where(t => t.boss && !EhChefeFinal(t)).ToList();
                 tipo = chefes.Count > 0 ? chefes[UnityEngine.Random.Range(0, chefes.Count)] : null;
             }
             else
@@ -359,6 +362,7 @@ namespace MuckMod
                 tipo = tipos.FirstOrDefault(t => Chave(t.name) == k) ?? tipos.FirstOrDefault(t => Chave(t.name).StartsWith(k));
             }
             if (!tipo) { Msg($"Nao achei o mob \"{nome}\". Veja /mobs."); return; }
+            if (EhChefeFinal(tipo)) { Msg("Esse e o chefe final (Bob): mata-lo ENCERRA a partida. Nao vou criar."); return; }
             for (int i = 0; i < qtd; i++)
             {
                 Vector3 pos = p.transform.position + new Vector3(UnityEngine.Random.Range(-6f, 6f), 2f, UnityEngine.Random.Range(-6f, 6f));
@@ -389,7 +393,7 @@ namespace MuckMod
             int n = 0;
             foreach (int id in _criados.ToList())
             {
-                if (MobManager.Instance.mobs.TryGetValue(id, out var m) && m)
+                if (MobManager.Instance.mobs.TryGetValue(id, out var m) && m && !m.GetComponent<BobMob>())
                 {
                     ClientSend.PlayerDamageMob(id, 99999999, 1f, 0, m.transform.position);
                     n++;
@@ -471,4 +475,5 @@ namespace MuckMod
         public static void Para(Coroutine c) { if (_i && c != null) _i.StopCoroutine(c); }
     }
 }
+
 

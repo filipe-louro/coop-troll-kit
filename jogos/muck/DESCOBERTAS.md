@@ -55,5 +55,10 @@ Teclas: F5 bomba · F6 bicho · F7 chefe (host) · F8 +500 ouro · F9/F10 dano �
 - "Autor" do `HitPlayer` só é usado para uma conquista; mandar o próprio amigo como autor não aponta você.
 - O efeito de explosão é escolhido pelo nome (contém "xplo"); a lista sai no log na 1ª `/bomba` — **não verificado em jogo**.
 
+- **Bob é o chefe final**: matá-lo encerra a partida (`Dragon` → `GameOver`). Identificar por `mobPrefab.GetComponent<BobMob>()`.
+  `/chefe`/F7 nunca o sorteiam e `/limpar` nunca o mata (aprendido do jeito difícil: F7 + `/limpar` zerou o jogo).
+- F7 (chefe) exige **Shift** — tecla única perto de F5/F6 é fácil de apertar sem querer.
+
 ## 7. Não feito / limites
 - Lançar/teleportar amigo: movimento é de cada PC, não há pacote para isso.
+
